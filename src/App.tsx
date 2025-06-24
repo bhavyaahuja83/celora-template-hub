@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Upload from "./pages/Upload";
+import UploadTemplate from "./pages/UploadTemplate";
 import TemplateDetail from "./pages/TemplateDetail";
 import Pricing from "./pages/Pricing";
 import Categories from "./pages/Categories";
@@ -23,6 +24,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/upload" element={<Upload />} />
+          <Route path="/upload-template" element={<UploadTemplate />} />
           <Route path="/templates/:id" element={<TemplateDetail />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/categories" element={<Categories />} />
