@@ -1,53 +1,26 @@
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search, Upload, Star, Download, Filter } from "lucide-react";
+import { Search, Upload, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import TemplateCard from "@/components/TemplateCard";
+import PlaceholderTemplateCard from "@/components/PlaceholderTemplateCard";
 import FeaturedSection from "@/components/FeaturedSection";
 import CategoryFilter from "@/components/CategoryFilter";
+import TemplateFiltersComponent from "@/components/TemplateFilters";
+import { useTemplates, useFeaturedTemplates } from "@/hooks/useTemplates";
+import { TemplateFilters } from "@/types/template";
 
 const Index = () => {
-  const featuredTemplates = [
-    {
-      id: "1",
-      title: "Modern Dashboard UI Kit",
-      description: "Complete dashboard template with 50+ components",
-      price: 2999,
-      originalPrice: 4999,
-      image: "/api/placeholder/400/300",
-      category: "Web",
-      rating: 4.8,
-      downloads: 1240,
-      tags: ["React", "Dashboard", "Admin"]
-    },
-    {
-      id: "2", 
-      title: "E-commerce Mobile App",
-      description: "Beautiful Flutter e-commerce app template",
-      price: 3999,
-      originalPrice: 5999,
-      image: "/api/placeholder/400/300",
-      category: "Mobile",
-      rating: 4.9,
-      downloads: 856,
-      tags: ["Flutter", "E-commerce", "Mobile"]
-    },
-    {
-      id: "3",
-      title: "Landing Page Collection",
-      description: "10 responsive landing pages for startups",
-      price: 1999,
-      originalPrice: 2999,
-      image: "/api/placeholder/400/300", 
-      category: "Web",
-      rating: 4.7,
-      downloads: 2100,
-      tags: ["HTML", "CSS", "Landing"]
-    }
-  ];
+  const [filters, setFilters] = useState<TemplateFilters>({});
+  const [showFilters, setShowFilters] = useState(false);
+  
+  const { data: templatesData, isLoading } = useTemplates(filters);
+  const { data: featuredData } = useFeaturedTemplates();
+
+  const templates = templatesData?.templates || [];
+  const featuredTemplates = featuredData?.templates || [];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
@@ -104,6 +77,8 @@ const Index = () => {
               <Input 
                 placeholder="Search templates, components, or frameworks..."
                 className="pl-12 pr-4 py-4 text-lg border-purple-200 focus:border-purple-400 rounded-xl shadow-lg"
+                value={filters.searchQuery || ''}
+                onChange={(e) => setFilters(prev => ({ ...prev, searchQuery: e.target.value }))}
               />
               <Button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-purple-600 to-purple-700">
                 Search
@@ -113,15 +88,15 @@ const Index = () => {
 
           {/* Quick Stats */}
           <div className="flex justify-center space-x-8 text-center">
-            <div>
+            <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
               <div className="text-3xl font-bold text-purple-600">12,500+</div>
               <div className="text-gray-600">Templates</div>
             </div>
-            <div>
+            <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
               <div className="text-3xl font-bold text-purple-600">95k+</div>
               <div className="text-gray-600">Downloads</div>
             </div>
-            <div>
+            <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
               <div className="text-3xl font-bold text-purple-600">4.8★</div>
               <div className="text-gray-600">Average Rating</div>
             </div>
@@ -133,47 +108,100 @@ const Index = () => {
       <CategoryFilter />
 
       {/* Featured Templates */}
-      <FeaturedSection templates={featuredTemplates} />
+      {featuredTemplates.length > 0 && (
+        <FeaturedSection templates={featuredTemplates} />
+      )}
 
       {/* Template Grid */}
       <section className="py-16 px-4">
         <div className="container mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-3xl font-bold text-gray-800">Latest Templates</h3>
-            <Button variant="outline" className="border-purple-200 text-purple-600 hover:bg-purple-50">
-              <Filter className="w-4 h-4 mr-2" />
-              Filter
-            </Button>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {featuredTemplates.map((template) => (
-              <TemplateCard key={template.id} template={template} />
-            ))}
-            {/* Additional templates */}
-            {[...Array(8)].map((_, i) => (
-              <TemplateCard 
-                key={`additional-${i}`}
-                template={{
-                  id: `${i + 4}`,
-                  title: `Template ${i + 4}`,
-                  description: "Professional template for modern applications",
-                  price: 1999 + (i * 500),
-                  originalPrice: 2999 + (i * 500),
-                  image: "/api/placeholder/400/300",
-                  category: i % 2 === 0 ? "Web" : "Mobile",
-                  rating: 4.5 + (i * 0.1),
-                  downloads: 500 + (i * 100),
-                  tags: ["Modern", "Clean", "Professional"]
-                }}
-              />
-            ))}
-          </div>
-          
-          <div className="text-center mt-12">
-            <Button className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 px-8 py-3">
-              Load More Templates
-            </Button>
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Sidebar Filters */}
+            <div className={`lg:w-1/4 ${showFilters ? 'block' : 'hidden lg:block'}`}>
+              <div className="bg-white rounded-xl p-6 shadow-lg sticky top-24">
+                <TemplateFiltersComponent
+                  filters={filters}
+                  onFiltersChange={setFilters}
+                  templateCount={templatesData?.total || 0}
+                />
+              </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="lg:w-3/4">
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <h3 className="text-3xl font-bold text-gray-800">
+                    {filters.isTrending ? 'Trending Templates' : 
+                     filters.category ? `${filters.category} Templates` : 
+                     'Latest Templates'}
+                  </h3>
+                  <p className="text-gray-600 mt-1">
+                    {templatesData?.total || 0} templates found
+                  </p>
+                </div>
+                <Button 
+                  variant="outline" 
+                  className="lg:hidden border-purple-200 text-purple-600 hover:bg-purple-50"
+                  onClick={() => setShowFilters(!showFilters)}
+                >
+                  <Filter className="w-4 h-4 mr-2" />
+                  Filter
+                </Button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {isLoading ? (
+                  // Show placeholder cards while loading
+                  Array.from({ length: 9 }).map((_, i) => (
+                    <PlaceholderTemplateCard key={i} />
+                  ))
+                ) : templates.length > 0 ? (
+                  templates.map((template) => (
+                    <TemplateCard key={template.id} template={template} />
+                  ))
+                ) : (
+                  // Show placeholder cards when no templates
+                  <div className="col-span-full">
+                    <div className="text-center py-12">
+                      <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Upload className="w-12 h-12 text-gray-400" />
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                        No templates found
+                      </h3>
+                      <p className="text-gray-500 mb-6">
+                        {filters.searchQuery || filters.category 
+                          ? 'Try adjusting your filters to see more templates.'
+                          : 'Be the first to upload a template to this category!'
+                        }
+                      </p>
+                      <Link to="/upload">
+                        <Button className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800">
+                          <Upload className="w-4 h-4 mr-2" />
+                          Upload Template
+                        </Button>
+                      </Link>
+                    </div>
+                    
+                    {/* Show some placeholder cards for design */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
+                      {Array.from({ length: 6 }).map((_, i) => (
+                        <PlaceholderTemplateCard key={i} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {templates.length > 0 && templatesData?.hasMore && (
+                <div className="text-center mt-12">
+                  <Button className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 px-8 py-3">
+                    Load More Templates
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>

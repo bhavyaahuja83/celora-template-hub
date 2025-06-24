@@ -1,63 +1,28 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, Star, Zap, Crown } from "lucide-react";
+import { Check, Star, Zap, Crown, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+import { pricingPlans } from "@/config/pricing";
+import { useState } from "react";
+import ContactModal from "@/components/ContactModal";
 
 const Pricing = () => {
-  const plans = [
-    {
-      name: "Free",
-      price: 0,
-      period: "forever",
-      description: "Perfect for exploring our platform",
-      features: [
-        "Browse all templates",
-        "Download 2 free templates/month",
-        "Basic support",
-        "Community access"
-      ],
-      buttonText: "Get Started",
-      popular: false,
-      icon: Star
-    },
-    {
-      name: "Pro",
-      price: 999,
-      period: "month",
-      description: "Best for individual developers",
-      features: [
-        "Download 50 templates/month",
-        "Priority support",
-        "Early access to new templates",
-        "Commercial license included",
-        "Advanced filters & search",
-        "Template customization guide"
-      ],
-      buttonText: "Start Pro Trial",
-      popular: true,
-      icon: Zap
-    },
-    {
-      name: "Team",
-      price: 2999,
-      period: "month",
-      description: "Perfect for development teams",
-      features: [
-        "Unlimited downloads",
-        "Team collaboration tools",
-        "Custom template requests",
-        "Dedicated account manager",
-        "API access",
-        "White-label licensing",
-        "Advanced analytics"
-      ],
-      buttonText: "Contact Sales",
-      popular: false,
-      icon: Crown
+  const [showContactModal, setShowContactModal] = useState(false);
+
+  const getIcon = (iconName: string) => {
+    switch (iconName) {
+      case 'Star': return Star;
+      case 'Zap': return Zap;
+      case 'Crown': return Crown;
+      case 'Users': return Users;
+      default: return Star;
     }
-  ];
+  };
+
+  const handleTeamPlanClick = () => {
+    setShowContactModal(true);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
@@ -123,22 +88,24 @@ const Pricing = () => {
       {/* Pricing Cards */}
       <section className="pb-20 px-4">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {plans.map((plan, index) => {
-              const IconComponent = plan.icon;
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+            {pricingPlans.map((plan, index) => {
+              const IconComponent = getIcon(plan.icon);
+              const isTeamPlan = plan.id === 'team';
+              
               return (
                 <Card 
                   key={plan.name} 
                   className={`relative transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
                     plan.popular 
-                      ? 'border-2 border-purple-400 shadow-xl animate-fade-in' 
+                      ? 'border-2 border-purple-400 shadow-xl animate-fade-in scale-105' 
                       : 'border-gray-200 shadow-lg hover:border-purple-200 animate-fade-in'
                   }`}
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  {plan.popular && (
+                  {plan.badge && (
                     <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-purple-700 px-4 py-1">
-                      Most Popular
+                      {plan.badge}
                     </Badge>
                   )}
                   
@@ -154,10 +121,16 @@ const Pricing = () => {
                     </div>
                     <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
                     <div className="mt-4">
-                      <span className="text-4xl font-bold text-purple-600">
-                        ₹{plan.price.toLocaleString()}
-                      </span>
-                      <span className="text-gray-500 ml-1">/{plan.period}</span>
+                      {isTeamPlan ? (
+                        <span className="text-2xl font-bold text-purple-600">Custom Pricing</span>
+                      ) : (
+                        <>
+                          <span className="text-4xl font-bold text-purple-600">
+                            ₹{plan.price.toLocaleString()}
+                          </span>
+                          <span className="text-gray-500 ml-1">/{plan.period}</span>
+                        </>
+                      )}
                     </div>
                     <p className="text-gray-600 mt-2">{plan.description}</p>
                   </CardHeader>
@@ -167,7 +140,7 @@ const Pricing = () => {
                       {plan.features.map((feature, featureIndex) => (
                         <li key={featureIndex} className="flex items-start space-x-3">
                           <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-gray-700">{feature}</span>
+                          <span className="text-gray-700 text-sm">{feature}</span>
                         </li>
                       ))}
                     </ul>
@@ -179,6 +152,7 @@ const Pricing = () => {
                           : 'bg-white border-2 border-purple-200 text-purple-600 hover:bg-purple-50'
                       }`}
                       variant={plan.popular ? "default" : "outline"}
+                      onClick={isTeamPlan ? handleTeamPlanClick : undefined}
                     >
                       {plan.buttonText}
                     </Button>
@@ -298,6 +272,11 @@ const Pricing = () => {
           </div>
         </div>
       </footer>
+
+      <ContactModal
+        isOpen={showContactModal}
+        onClose={() => setShowContactModal(false)}
+      />
     </div>
   );
 };
