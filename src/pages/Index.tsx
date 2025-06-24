@@ -1,11 +1,14 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { Link } from "react-router-dom";
 import CategoryFilter from "@/components/CategoryFilter";
 import FeaturedSection from "@/components/FeaturedSection";
 import PlaceholderTemplateCard from "@/components/PlaceholderTemplateCard";
 import { useFeaturedTemplates, useTrendingTemplates } from "@/hooks/useTemplates";
+import { useMockAuth } from "@/hooks/useAuth";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,10 +16,13 @@ const Index = () => {
   
   const { data: featuredTemplates, isLoading: featuredLoading } = useFeaturedTemplates(3);
   const { data: trendingTemplates, isLoading: trendingLoading } = useTrendingTemplates(6);
+  const { isAuthenticated } = useMockAuth();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Searching for:", searchQuery);
+    // TODO: Navigate to categories page with search query
+    window.location.href = `/categories?search=${encodeURIComponent(searchQuery)}`;
   };
 
   return (
@@ -26,22 +32,40 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-8">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
-                Celora
-              </h1>
+              <Link to="/" className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-purple-800 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">C</span>
+                </div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
+                  Celora
+                </h1>
+              </Link>
               <nav className="hidden md:flex space-x-6">
-                <a href="/" className="text-gray-700 hover:text-purple-600 transition-colors">Home</a>
-                <a href="/categories" className="text-gray-700 hover:text-purple-600 transition-colors">Browse</a>
-                <a href="/pricing" className="text-gray-700 hover:text-purple-600 transition-colors">Pricing</a>
+                <Link to="/" className="text-gray-700 hover:text-purple-600 transition-colors">Home</Link>
+                <Link to="/categories" className="text-gray-700 hover:text-purple-600 transition-colors">Browse</Link>
+                <Link to="/pricing" className="text-gray-700 hover:text-purple-600 transition-colors">Pricing</Link>
               </nav>
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="outline" asChild>
-                <a href="/upload-template">Upload Template</a>
-              </Button>
-              <Button className="bg-purple-600 hover:bg-purple-700">
-                Sign In
-              </Button>
+              {isAuthenticated ? (
+                <>
+                  <Button variant="outline" asChild>
+                    <Link to="/upload-template">Upload Template</Link>
+                  </Button>
+                  <Button className="bg-purple-600 hover:bg-purple-700" asChild>
+                    <Link to="/dashboard">Dashboard</Link>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="outline" asChild>
+                    <Link to="/upload-template">Upload Template</Link>
+                  </Button>
+                  <Button className="bg-purple-600 hover:bg-purple-700" asChild>
+                    <Link to="/auth">Sign In</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -147,15 +171,21 @@ const Index = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <PlaceholderTemplateCard key={index} />
-              ))}
+              {trendingTemplates?.templates.length ? (
+                trendingTemplates.templates.map((template) => (
+                  <PlaceholderTemplateCard key={template.id} />
+                ))
+              ) : (
+                Array.from({ length: 6 }).map((_, index) => (
+                  <PlaceholderTemplateCard key={index} />
+                ))
+              )}
             </div>
           )}
 
           <div className="text-center mt-12">
             <Button size="lg" variant="outline" className="px-8" asChild>
-              <a href="/categories">View All Templates</a>
+              <Link to="/categories">View All Templates</Link>
             </Button>
           </div>
         </div>
@@ -173,10 +203,10 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" variant="secondary" className="px-8" asChild>
-              <a href="/categories">Browse Templates</a>
+              <Link to="/categories">Browse Templates</Link>
             </Button>
             <Button size="lg" variant="outline" className="px-8 border-white text-white hover:bg-white hover:text-purple-700" asChild>
-              <a href="/upload-template">Sell Your Templates</a>
+              <Link to="/upload-template">Sell Your Templates</Link>
             </Button>
           </div>
         </div>
@@ -187,9 +217,14 @@ const Index = () => {
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
-                Celora
-              </h3>
+              <Link to="/" className="flex items-center space-x-2 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">C</span>
+                </div>
+                <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
+                  Celora
+                </h3>
+              </Link>
               <p className="text-gray-400">
                 The premier marketplace for premium templates and UI components.
               </p>
@@ -197,28 +232,28 @@ const Index = () => {
             <div>
               <h4 className="font-semibold mb-4">Templates</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Web Templates</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Flutter Apps</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Android Apps</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">UI Kits</a></li>
+                <li><Link to="/categories?category=Web" className="hover:text-white transition-colors">Web Templates</Link></li>
+                <li><Link to="/categories?category=Flutter" className="hover:text-white transition-colors">Flutter Apps</Link></li>
+                <li><Link to="/categories?category=Android" className="hover:text-white transition-colors">Android Apps</Link></li>
+                <li><Link to="/categories?category=UI Kit" className="hover:text-white transition-colors">UI Kits</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+                <li><Link to="/about" className="hover:text-white transition-colors">About</Link></li>
+                <li><Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link></li>
+                <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
+                <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Support</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Licensing</a></li>
+                <li><Link to="/help" className="hover:text-white transition-colors">Help Center</Link></li>
+                <li><Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
+                <li><Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/licensing" className="hover:text-white transition-colors">Licensing</Link></li>
               </ul>
             </div>
           </div>
