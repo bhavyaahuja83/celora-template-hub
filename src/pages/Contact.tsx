@@ -6,7 +6,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +20,7 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,6 +31,11 @@ const Contact = () => {
     
     setIsSubmitting(false);
     setIsSubmitted(true);
+    
+    toast({
+      title: "Message sent!",
+      description: "Thank you for reaching out. We'll get back to you within 24 hours.",
+    });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -39,48 +47,32 @@ const Contact = () => {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50 flex items-center justify-center px-4">
-        <Card className="max-w-md w-full text-center shadow-2xl border-0">
-          <CardContent className="p-8">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <CheckCircle className="w-8 h-8 text-green-600" />
-            </div>
-            <h2 className="text-2xl font-bold mb-2">Message Sent!</h2>
-            <p className="text-gray-600 mb-6">
-              Thank you for reaching out. Our team will get back to you within 24 hours.
-            </p>
-            <Button asChild className="w-full">
-              <Link to="/">Return to Home</Link>
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
+        <Navbar />
+        <div className="flex items-center justify-center px-4 py-16">
+          <Card className="max-w-md w-full text-center shadow-2xl border-0">
+            <CardContent className="p-8">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="w-8 h-8 text-green-600" />
+              </div>
+              <h2 className="text-2xl font-bold mb-2">Message Sent!</h2>
+              <p className="text-gray-600 mb-6">
+                Thank you for reaching out. Our team will get back to you within 24 hours.
+              </p>
+              <Button asChild className="w-full">
+                <a href="/">Return to Home</a>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+        <Footer />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-purple-100 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-purple-800 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">C</span>
-              </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
-                Celora
-              </h1>
-            </Link>
-            
-            <nav className="hidden md:flex space-x-6">
-              <Link to="/" className="text-gray-700 hover:text-purple-600 transition-colors">Home</Link>
-              <Link to="/categories" className="text-gray-700 hover:text-purple-600 transition-colors">Browse</Link>
-              <Link to="/pricing" className="text-gray-700 hover:text-purple-600 transition-colors">Pricing</Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-12">
@@ -261,6 +253,8 @@ const Contact = () => {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 };

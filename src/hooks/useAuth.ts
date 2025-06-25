@@ -50,11 +50,18 @@ export const useMockAuth = () => {
       
       // Check for stored auth token (mock)
       const storedToken = localStorage.getItem('celora_auth_token');
+      const storedUser = localStorage.getItem('celora_user');
       
-      if (storedToken === 'mock-jwt-token') {
+      if (storedToken && storedUser) {
         // Simulate API call to verify token
         setTimeout(() => {
-          setUser(mockUser);
+          try {
+            setUser(JSON.parse(storedUser));
+          } catch {
+            // If stored user data is invalid, clear it
+            localStorage.removeItem('celora_auth_token');
+            localStorage.removeItem('celora_user');
+          }
           setIsLoading(false);
         }, 500);
       } else {
@@ -73,14 +80,22 @@ export const useMockAuth = () => {
     // Simulate API login call
     return new Promise<void>((resolve, reject) => {
       setTimeout(() => {
-        if (email === 'demo@celora.com' && password === 'demo123') {
+        // For development, accept any valid email/password combination
+        if (email.includes('@') && password.length >= 8) {
+          const loggedInUser = {
+            ...mockUser,
+            email: email,
+            name: email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+          };
+          
           localStorage.setItem('celora_auth_token', 'mock-jwt-token');
-          setUser(mockUser);
+          localStorage.setItem('celora_user', JSON.stringify(loggedInUser));
+          setUser(loggedInUser);
           setIsLoading(false);
           resolve();
         } else {
           setIsLoading(false);
-          reject(new Error('Invalid credentials'));
+          reject(new Error('Please enter a valid email and password (min 8 characters)'));
         }
       }, 1000);
     });
@@ -88,6 +103,7 @@ export const useMockAuth = () => {
 
   const logout = () => {
     localStorage.removeItem('celora_auth_token');
+    localStorage.removeItem('celora_user');
     setUser(null);
   };
 
