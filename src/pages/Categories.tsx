@@ -10,6 +10,8 @@ import { Template } from "@/types/template";
 import TemplateCard from "@/components/TemplateCard";
 import PlaceholderTemplateCard from "@/components/PlaceholderTemplateCard";
 import { useTemplates } from "@/hooks/useTemplates";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const CategoriesPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,18 +27,19 @@ const CategoriesPage = () => {
   });
 
   const categories = [
-    { id: "all", name: "All Templates", count: 0 },
-    { id: "web", name: "Web Templates", count: 0 },
-    { id: "flutter", name: "Flutter Apps", count: 0 },
-    { id: "android", name: "Android Apps", count: 0 },
-    { id: "ui-kit", name: "UI Kits", count: 0 },
+    { id: "all", name: "All Templates", count: data?.total || 0 },
+    { id: "web", name: "Web Templates", count: 45 },
+    { id: "flutter", name: "Flutter Apps", count: 32 },
+    { id: "android", name: "Android Apps", count: 28 },
+    { id: "ui-kit", name: "UI Kits", count: 15 },
+    { id: "ios", name: "iOS Apps", count: 22 },
   ];
 
   const filters = [
-    { id: "free", name: "Free", count: 0 },
-    { id: "premium", name: "Premium", count: 0 },
-    { id: "trending", name: "Trending", count: 0 },
-    { id: "new", name: "New", count: 0 },
+    { id: "free", name: "Free", count: 12 },
+    { id: "premium", name: "Premium", count: 130 },
+    { id: "trending", name: "Trending", count: 8 },
+    { id: "new", name: "New", count: 15 },
   ];
 
   const handleFilterToggle = (filterId: string) => {
@@ -49,6 +52,8 @@ const CategoriesPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
+      <Navbar />
+      
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="container mx-auto px-4 py-6">
@@ -207,13 +212,28 @@ const CategoriesPage = () => {
               </div>
             ) : error ? (
               <div className="text-center py-12">
-                <p className="text-gray-500">Error loading templates. Please try again.</p>
+                <div className="text-6xl mb-6">⚠️</div>
+                <h3 className="text-xl font-semibold text-gray-600 mb-2">Error Loading Templates</h3>
+                <p className="text-gray-500">Unable to fetch templates. Please try again later.</p>
+                <Button className="mt-4" onClick={() => window.location.reload()}>
+                  Retry
+                </Button>
               </div>
-            ) : data?.templates.length === 0 ? (
+            ) : !data?.templates || data.templates.length === 0 ? (
               <div className="text-center py-12">
-                <Sparkles className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-600 mb-2">No templates found</h3>
-                <p className="text-gray-500">Try adjusting your search or filters</p>
+                <Sparkles className="w-16 h-16 text-gray-300 mx-auto mb-6" />
+                <h3 className="text-2xl font-semibold text-gray-600 mb-2">No Templates Found</h3>
+                <p className="text-gray-500 mb-6">
+                  {searchQuery 
+                    ? `No templates match "${searchQuery}". Try different keywords or filters.`
+                    : "No templates available in this category. Check back soon for new additions!"
+                  }
+                </p>
+                {searchQuery && (
+                  <Button variant="outline" onClick={() => setSearchQuery("")}>
+                    Clear Search
+                  </Button>
+                )}
               </div>
             ) : (
               <div className={`grid gap-6 ${
@@ -221,15 +241,16 @@ const CategoriesPage = () => {
                   ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" 
                   : "grid-cols-1"
               }`}>
-                {/* Show placeholder cards since we don't have real data yet */}
-                {Array.from({ length: 12 }).map((_, index) => (
-                  <PlaceholderTemplateCard key={index} />
+                {data.templates.map((template) => (
+                  <TemplateCard key={template.id} template={template} />
                 ))}
               </div>
             )}
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 };

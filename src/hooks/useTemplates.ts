@@ -1,240 +1,224 @@
 
-import { useState, useEffect } from 'react';
-import { Template, TemplateFilters, PaginatedTemplates } from '@/types/template';
+import { useQuery } from "@tanstack/react-query";
+import { Template, TemplateFilters, PaginatedTemplates } from "@/types/template";
 
-// Mock template data for development
+// Mock templates data with proper structure
 const mockTemplates: Template[] = [
   {
     id: "1",
-    title: "Modern Dashboard UI Kit",
-    description: "Complete dashboard interface with 40+ screens, dark/light mode, and responsive design",
+    title: "Modern E-commerce Dashboard",
+    description: "A comprehensive dashboard template for e-commerce platforms with analytics, inventory management, and user interfaces.",
     price: 2999,
-    originalPrice: 4999,
-    image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=400&h=300&fit=crop",
+    originalPrice: 3999,
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop",
     category: "Web",
     rating: 4.8,
-    downloads: 1245,
-    tags: ["dashboard", "admin", "react", "tailwind"],
+    downloads: 1250,
+    tags: ["dashboard", "ecommerce", "analytics", "admin"],
     isPremium: true,
     isFree: false,
     isTrending: true,
     isNew: false,
-    createdAt: "2024-01-15",
-    updatedAt: "2024-01-20",
-    userId: "author1",
+    createdAt: "2024-12-20T10:00:00Z",
+    updatedAt: "2024-12-20T10:00:00Z",
+    userId: "user1",
     previewImages: [
-      "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop"
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop",
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop"
     ]
   },
   {
     id: "2",
-    title: "E-commerce Mobile App Flutter",
-    description: "Complete shopping app with payment integration, product catalog, and user management",
-    price: 3999,
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=300&fit=crop",
+    title: "Flutter Food Delivery App",
+    description: "Complete food delivery app built with Flutter. Includes user app, delivery partner app, and restaurant dashboard.",
+    price: 4999,
+    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop",
     category: "Flutter",
     rating: 4.9,
-    downloads: 892,
-    tags: ["ecommerce", "flutter", "mobile", "shopping"],
+    downloads: 850,
+    tags: ["food", "delivery", "mobile", "flutter"],
     isPremium: true,
     isFree: false,
     isTrending: true,
     isNew: true,
-    createdAt: "2024-01-20",
-    updatedAt: "2024-01-22",
-    userId: "author2"
+    createdAt: "2024-12-22T14:30:00Z",
+    updatedAt: "2024-12-22T14:30:00Z",
+    userId: "user2"
   },
   {
     id: "3",
-    title: "Portfolio Landing Page",
-    description: "Beautiful portfolio template for developers and designers with smooth animations",
+    title: "Creative Portfolio Website",
+    description: "Stunning portfolio template for designers, photographers, and creative professionals. Fully responsive and customizable.",
     price: 0,
-    image: "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=400&h=300&fit=crop",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop",
     category: "Web",
     rating: 4.6,
-    downloads: 2156,
-    tags: ["portfolio", "landing", "animation", "free"],
+    downloads: 2100,
+    tags: ["portfolio", "creative", "photography", "design"],
     isPremium: false,
     isFree: true,
     isTrending: false,
     isNew: false,
-    createdAt: "2024-01-10",
-    updatedAt: "2024-01-12",
-    userId: "author3"
+    createdAt: "2024-12-18T09:15:00Z",
+    updatedAt: "2024-12-18T09:15:00Z",
+    userId: "user3"
   },
   {
     id: "4",
-    title: "Android Weather App",
-    description: "Modern weather application with location services and 7-day forecast",
-    price: 1999,
-    image: "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=400&h=300&fit=crop",
+    title: "Android Chat Application",
+    description: "Feature-rich chat application for Android with real-time messaging, media sharing, and group conversations.",
+    price: 3499,
+    image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=300&fit=crop",
     category: "Android",
     rating: 4.7,
-    downloads: 543,
-    tags: ["weather", "android", "kotlin", "api"],
+    downloads: 680,
+    tags: ["chat", "messaging", "android", "realtime"],
     isPremium: true,
     isFree: false,
     isTrending: false,
     isNew: true,
-    createdAt: "2024-01-18",
-    updatedAt: "2024-01-19",
-    userId: "author4"
+    createdAt: "2024-12-21T16:45:00Z",
+    updatedAt: "2024-12-21T16:45:00Z",
+    userId: "user4"
   },
   {
     id: "5",
-    title: "Design System UI Kit",
-    description: "Complete design system with 200+ components for Figma and React",
-    price: 4999,
-    originalPrice: 7999,
-    image: "https://images.unsplash.com/photo-1558655146-d09347e92766?w=400&h=300&fit=crop",
+    title: "Material Design UI Kit",
+    description: "Comprehensive UI kit with 100+ components following Material Design guidelines. Perfect for any project.",
+    price: 1999,
+    originalPrice: 2999,
+    image: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=400&h=300&fit=crop",
     category: "UI Kit",
     rating: 4.9,
-    downloads: 756,
-    tags: ["design-system", "components", "figma", "react"],
+    downloads: 1580,
+    tags: ["ui kit", "material design", "components", "design system"],
     isPremium: true,
     isFree: false,
     isTrending: true,
     isNew: false,
-    createdAt: "2024-01-12",
-    updatedAt: "2024-01-16",
-    userId: "author5"
+    createdAt: "2024-12-19T11:20:00Z",
+    updatedAt: "2024-12-19T11:20:00Z",
+    userId: "user5"
   },
   {
     id: "6",
-    title: "Blog Template Next.js",
-    description: "SEO-optimized blog template with markdown support and admin panel",
-    price: 0,
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=300&fit=crop",
+    title: "Startup Landing Page",
+    description: "High-converting landing page template for startups and SaaS companies. Includes pricing, testimonials, and CTAs.",
+    price: 1599,
+    image: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=300&fit=crop",
     category: "Web",
     rating: 4.5,
-    downloads: 1834,
-    tags: ["blog", "nextjs", "markdown", "free"],
-    isPremium: false,
-    isFree: true,
+    downloads: 920,
+    tags: ["landing page", "startup", "saas", "conversion"],
+    isPremium: true,
+    isFree: false,
     isTrending: false,
     isNew: false,
-    createdAt: "2024-01-08",
-    updatedAt: "2024-01-10",
-    userId: "author6"
+    createdAt: "2024-12-17T13:10:00Z",
+    updatedAt: "2024-12-17T13:10:00Z",
+    userId: "user6"
   }
 ];
 
-export const useTemplates = (filters?: TemplateFilters, page = 1, pageSize = 12) => {
-  const [data, setData] = useState<PaginatedTemplates | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchTemplates = async () => {
-      setIsLoading(true);
-      setError(null);
-      
-      try {
-        // TODO: Replace with actual Supabase call
-        // const { data, error } = await supabase
-        //   .from('templates')
-        //   .select('*')
-        //   .match(filters)
-        //   .order('created_at', { ascending: false })
-        //   .range((page - 1) * pageSize, page * pageSize - 1);
-        
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        let filteredTemplates = [...mockTemplates];
-        
-        // Apply filters
-        if (filters?.category && filters.category !== 'all') {
-          filteredTemplates = filteredTemplates.filter(t => t.category === filters.category);
-        }
-        
-        if (filters?.isPremium !== undefined) {
-          filteredTemplates = filteredTemplates.filter(t => t.isPremium === filters.isPremium);
-        }
-        
-        if (filters?.isFree !== undefined) {
-          filteredTemplates = filteredTemplates.filter(t => t.isFree === filters.isFree);
-        }
-        
-        if (filters?.isTrending) {
-          filteredTemplates = filteredTemplates.filter(t => t.isTrending);
-        }
-        
-        if (filters?.searchQuery) {
-          const query = filters.searchQuery.toLowerCase();
-          filteredTemplates = filteredTemplates.filter(t => 
-            t.title.toLowerCase().includes(query) ||
-            t.description.toLowerCase().includes(query) ||
-            t.tags.some(tag => tag.toLowerCase().includes(query))
-          );
-        }
-        
-        // Apply sorting
-        if (filters?.sortBy) {
-          switch (filters.sortBy) {
-            case 'newest':
-              filteredTemplates.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-              break;
-            case 'popular':
-              filteredTemplates.sort((a, b) => b.downloads - a.downloads);
-              break;
-            case 'price_low':
-              filteredTemplates.sort((a, b) => a.price - b.price);
-              break;
-            case 'price_high':
-              filteredTemplates.sort((a, b) => b.price - a.price);
-              break;
-            case 'rating':
-              filteredTemplates.sort((a, b) => b.rating - a.rating);
-              break;
-          }
-        }
-        
-        const startIndex = (page - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
-        const paginatedTemplates = filteredTemplates.slice(startIndex, endIndex);
-        
-        setData({
-          templates: paginatedTemplates,
-          total: filteredTemplates.length,
-          page,
-          pageSize,
-          hasMore: endIndex < filteredTemplates.length
-        });
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch templates');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchTemplates();
-  }, [filters, page, pageSize]);
-
-  return { data, isLoading, error };
-};
-
-export const useTrendingTemplates = (limit = 6) => {
-  return useTemplates({ isTrending: true }, 1, limit);
-};
-
-export const useFeaturedTemplates = (limit = 3) => {
-  return useTemplates({ sortBy: 'popular' }, 1, limit);
-};
-
-// Mock function for uploading templates
-export const uploadTemplate = async (templateData: FormData) => {
-  // TODO: Replace with Supabase storage + database calls
-  console.log('Uploading template...', templateData);
+// Mock API function
+const fetchTemplates = async (filters: TemplateFilters = {}): Promise<PaginatedTemplates> => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Simulate upload delay
-  await new Promise(resolve => setTimeout(resolve, 2000));
-  
-  // Mock response
+  let filteredTemplates = [...mockTemplates];
+
+  // Apply category filter
+  if (filters.category && filters.category !== "all") {
+    filteredTemplates = filteredTemplates.filter(
+      template => template.category.toLowerCase() === filters.category?.toLowerCase()
+    );
+  }
+
+  // Apply search query
+  if (filters.searchQuery) {
+    const query = filters.searchQuery.toLowerCase();
+    filteredTemplates = filteredTemplates.filter(template =>
+      template.title.toLowerCase().includes(query) ||
+      template.description.toLowerCase().includes(query) ||
+      template.tags.some(tag => tag.toLowerCase().includes(query))
+    );
+  }
+
+  // Apply premium/free filter
+  if (filters.isPremium !== undefined) {
+    filteredTemplates = filteredTemplates.filter(template => template.isPremium === filters.isPremium);
+  }
+  if (filters.isFree !== undefined) {
+    filteredTemplates = filteredTemplates.filter(template => template.isFree === filters.isFree);
+  }
+
+  // Apply trending filter
+  if (filters.isTrending) {
+    filteredTemplates = filteredTemplates.filter(template => template.isTrending);
+  }
+
+  // Apply sorting
+  if (filters.sortBy) {
+    switch (filters.sortBy) {
+      case "newest":
+        filteredTemplates.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        break;
+      case "popular":
+        filteredTemplates.sort((a, b) => b.downloads - a.downloads);
+        break;
+      case "rating":
+        filteredTemplates.sort((a, b) => b.rating - a.rating);
+        break;
+      case "price_low":
+        filteredTemplates.sort((a, b) => a.price - b.price);
+        break;
+      case "price_high":
+        filteredTemplates.sort((a, b) => b.price - a.price);
+        break;
+    }
+  }
+
   return {
-    success: true,
-    templateId: 'new-template-' + Date.now(),
-    message: 'Template uploaded successfully! It will be reviewed within 24 hours.'
+    templates: filteredTemplates,
+    total: filteredTemplates.length,
+    page: 1,
+    pageSize: filteredTemplates.length,
+    hasMore: false
   };
+};
+
+export const useTemplates = (filters: TemplateFilters = {}) => {
+  return useQuery({
+    queryKey: ["templates", filters],
+    queryFn: () => fetchTemplates(filters),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+};
+
+export const useFeaturedTemplates = (limit: number = 6) => {
+  return useQuery({
+    queryKey: ["templates", "featured", limit],
+    queryFn: async () => {
+      const result = await fetchTemplates({ isTrending: true });
+      return {
+        ...result,
+        templates: result.templates.slice(0, limit)
+      };
+    },
+    staleTime: 10 * 60 * 1000, // 10 minutes
+  });
+};
+
+export const useTrendingTemplates = (limit: number = 8) => {
+  return useQuery({
+    queryKey: ["templates", "trending", limit],
+    queryFn: async () => {
+      const result = await fetchTemplates({ isTrending: true });
+      return {
+        ...result,
+        templates: result.templates.slice(0, limit)
+      };
+    },
+    staleTime: 10 * 60 * 1000, // 10 minutes
+  });
 };
