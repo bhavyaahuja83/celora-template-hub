@@ -5,7 +5,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import Upload from "./pages/Upload";
 import UploadTemplate from "./pages/UploadTemplate";
 import TemplateDetail from "./pages/TemplateDetail";
 import Pricing from "./pages/Pricing";
@@ -28,25 +27,25 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/upload" element={<Upload />} />
-          <Route path="/upload-template" element={<UploadTemplate />} />
-          <Route path="/templates/:id" element={<TemplateDetail />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/creator-info" element={<CreatorInfo />} />
-          <Route path="/sell" element={<CreatorInfo />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <div className="w-full">
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/upload-template" element={<UploadTemplate />} />
+            <Route path="/template/:id" element={<TemplateDetail />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/creator-info" element={<CreatorInfo />} />
+            <Route path="/sell" element={<CreatorInfo />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
