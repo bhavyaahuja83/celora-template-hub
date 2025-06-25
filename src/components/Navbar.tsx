@@ -22,6 +22,9 @@ const Navbar = () => {
     { href: "/blog", label: "Blog" },
   ];
 
+  // Check if user is a seller - for now we'll assume authenticated users can sell
+  const isSeller = isAuthenticated && user;
+
   return (
     <header className="bg-white/95 backdrop-blur-md shadow-sm border-b sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
@@ -57,12 +60,16 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
               <>
-                <Button variant="outline" asChild>
-                  <Link to="/upload-template">Upload Template</Link>
-                </Button>
-                <Button variant="outline" asChild>
-                  <Link to="/dashboard">Dashboard</Link>
-                </Button>
+                {isSeller && (
+                  <>
+                    <Button variant="outline" asChild>
+                      <Link to="/upload-template">Upload Template</Link>
+                    </Button>
+                    <Button variant="outline" asChild>
+                      <Link to="/dashboard">Dashboard</Link>
+                    </Button>
+                  </>
+                )}
                 <Button 
                   variant="ghost" 
                   onClick={logout}
@@ -74,7 +81,7 @@ const Navbar = () => {
             ) : (
               <>
                 <Button variant="outline" asChild>
-                  <Link to="/creator-info">Sell Templates</Link>
+                  <Link to="/creator-info">Become a Seller</Link>
                 </Button>
                 <Button className="bg-purple-600 hover:bg-purple-700" asChild>
                   <Link to="/auth">Sign In</Link>
@@ -118,16 +125,20 @@ const Navbar = () => {
               <div className="flex flex-col space-y-2 pt-4 border-t border-gray-200">
                 {isAuthenticated ? (
                   <>
-                    <Button variant="outline" asChild className="w-full">
-                      <Link to="/upload-template" onClick={() => setIsMobileMenuOpen(false)}>
-                        Upload Template
-                      </Link>
-                    </Button>
-                    <Button variant="outline" asChild className="w-full">
-                      <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
-                        Dashboard
-                      </Link>
-                    </Button>
+                    {isSeller && (
+                      <>
+                        <Button variant="outline" asChild className="w-full">
+                          <Link to="/upload-template" onClick={() => setIsMobileMenuOpen(false)}>
+                            Upload Template
+                          </Link>
+                        </Button>
+                        <Button variant="outline" asChild className="w-full">
+                          <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                            Dashboard
+                          </Link>
+                        </Button>
+                      </>
+                    )}
                     <Button 
                       variant="ghost" 
                       onClick={() => {
@@ -143,7 +154,7 @@ const Navbar = () => {
                   <>
                     <Button variant="outline" asChild className="w-full">
                       <Link to="/creator-info" onClick={() => setIsMobileMenuOpen(false)}>
-                        Sell Templates
+                        Become a Seller
                       </Link>
                     </Button>
                     <Button className="bg-purple-600 hover:bg-purple-700 w-full" asChild>

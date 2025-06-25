@@ -6,10 +6,9 @@ import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import CategoryFilter from "@/components/CategoryFilter";
 import FeaturedSection from "@/components/FeaturedSection";
-import PlaceholderTemplateCard from "@/components/PlaceholderTemplateCard";
+import TemplateCard from "@/components/TemplateCard";
 import { useFeaturedTemplates, useTrendingTemplates } from "@/hooks/useTemplates";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Layout from "@/components/Layout";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -21,14 +20,11 @@ const Index = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Searching for:", searchQuery);
-    // TODO: Navigate to categories page with search query
     window.location.href = `/categories?search=${encodeURIComponent(searchQuery)}`;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
-      <Navbar />
-
+    <Layout className="bg-gradient-to-br from-purple-50 via-white to-purple-50">
       {/* Hero Section */}
       <section className="pt-20 pb-16 px-4">
         <div className="container mx-auto text-center">
@@ -124,19 +120,27 @@ const Index = () => {
           {trendingLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {Array.from({ length: 6 }).map((_, index) => (
-                <PlaceholderTemplateCard key={index} />
+                <div key={index} className="animate-pulse">
+                  <div className="bg-gray-200 h-48 rounded-lg mb-4"></div>
+                  <div className="space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                  </div>
+                </div>
               ))}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {trendingTemplates?.templates.length ? (
                 trendingTemplates.templates.map((template) => (
-                  <PlaceholderTemplateCard key={template.id} />
+                  <TemplateCard key={template.id} template={template} />
                 ))
               ) : (
-                Array.from({ length: 6 }).map((_, index) => (
-                  <PlaceholderTemplateCard key={index} />
-                ))
+                <div className="col-span-full text-center py-12">
+                  <div className="text-6xl mb-4">📱</div>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-2">No Trending Templates Yet</h3>
+                  <p className="text-gray-600">Check back soon for the hottest templates!</p>
+                </div>
               )}
             </div>
           )}
@@ -169,9 +173,7 @@ const Index = () => {
           </div>
         </div>
       </section>
-
-      <Footer />
-    </div>
+    </Layout>
   );
 };
 
