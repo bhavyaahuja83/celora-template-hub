@@ -18,12 +18,13 @@ const Navbar = () => {
     { href: "/", label: "Home" },
     { href: "/categories", label: "Browse" },
     { href: "/pricing", label: "Pricing" },
+    { href: "/tools", label: "Tools" },
     { href: "/about", label: "About" },
     { href: "/blog", label: "Blog" },
   ];
 
-  // Check if user is a seller - for now we'll assume authenticated users can sell
-  const isSeller = isAuthenticated && user;
+  // Check if user is a seller - show seller-specific buttons only for sellers
+  const isSeller = isAuthenticated && user?.userType === 'seller';
 
   return (
     <header className="bg-white/95 backdrop-blur-md shadow-sm border-b sticky top-0 z-50">

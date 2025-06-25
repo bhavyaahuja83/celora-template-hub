@@ -8,8 +8,7 @@ import { Eye, EyeOff, Github, Mail } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMockAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Layout from "@/components/Layout";
 
 const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,11 +18,12 @@ const Auth = () => {
     name: '', 
     email: '', 
     password: '', 
-    confirmPassword: '' 
+    confirmPassword: '',
+    userType: '' as 'buyer' | 'seller' | 'undecided'
   });
   const [isLoading, setIsLoading] = useState(false);
   
-  const { login } = useMockAuth();
+  const { login, register } = useMockAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -70,23 +70,37 @@ const Auth = () => {
       return;
     }
 
+    if (!signupData.userType) {
+      toast({
+        title: "Please select your role",
+        description: "Choose whether you want to buy or sell templates.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsLoading(true);
     
-    // Simulate signup
-    setTimeout(() => {
+    try {
+      await register(signupData.email, signupData.password, signupData.name, signupData.userType);
       toast({
         title: "Account created!",
         description: "Welcome to Celora! You can now access all features.",
       });
+      navigate(signupData.userType === 'seller' ? '/dashboard' : '/');
+    } catch (error) {
+      toast({
+        title: "Registration failed",
+        description: "Please try again with different credentials.",
+        variant: "destructive"
+      });
+    } finally {
       setIsLoading(false);
-      navigate('/dashboard');
-    }, 1500);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-50">
-      <Navbar />
-      
+    <Layout className="bg-gradient-to-br from-purple-50 via-white to-purple-50">
       <div className="flex items-center justify-center px-4 py-16">
         <div className="w-full max-w-md">
           <Card className="shadow-2xl border-0">
@@ -209,6 +223,45 @@ const Auth = () => {
                     </div>
 
                     <div>
+                      <label className="block text-sm font-medium mb-2">I want to:</label>
+                      <div className="space-y-2">
+                        <label className="flex items-center space-x-2">
+                          <input
+                            type="radio"
+                            name="userType"
+                            value="buyer"
+                            checked={signupData.userType === 'buyer'}
+                            onChange={(e) => setSignupData(prev => ({...prev, userType: e.target.value as 'buyer'}))}
+                            className="text-purple-600"
+                          />
+                          <span>Buy templates</span>
+                        </label>
+                        <label className="flex items-center space-x-2">
+                          <input
+                            type="radio"
+                            name="userType"
+                            value="seller"
+                            checked={signupData.userType === 'seller'}
+                            onChange={(e) => setSignupData(prev => ({...prev, userType: e.target.value as 'seller'}))}
+                            className="text-purple-600"
+                          />
+                          <span>Sell templates (creator)</span>
+                        </label>
+                        <label className="flex items-center space-x-2">
+                          <input
+                            type="radio"
+                            name="userType"
+                            value="undecided"
+                            checked={signupData.userType === 'undecided'}
+                            onChange={(e) => setSignupData(prev => ({...prev, userType: e.target.value as 'undecided'}))}
+                            className="text-purple-600"
+                          />
+                          <span>I'm not sure yet</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div>
                       <label className="block text-sm font-medium mb-2">Password</label>
                       <div className="relative">
                         <Input
@@ -306,9 +359,7 @@ const Auth = () => {
           </Card>
         </div>
       </div>
-      
-      <Footer />
-    </div>
+    </Layout>
   );
 };
 

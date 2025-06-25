@@ -5,6 +5,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
+  userType: 'buyer' | 'seller' | 'undecided';
   plan: 'free' | 'starter' | 'pro' | 'team';
   avatar?: string;
   joinedAt: string;
@@ -14,6 +15,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, name: string, userType: 'buyer' | 'seller' | 'undecided') => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -25,6 +27,7 @@ const mockUser: User = {
   id: "user123",
   email: "john@example.com",
   name: "John Doe",
+  userType: "seller",
   plan: "free",
   avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
   joinedAt: "2024-01-15"
@@ -101,6 +104,35 @@ export const useMockAuth = () => {
     });
   };
 
+  const register = async (email: string, password: string, name: string, userType: 'buyer' | 'seller' | 'undecided') => {
+    setIsLoading(true);
+    
+    // Simulate API register call
+    return new Promise<void>((resolve, reject) => {
+      setTimeout(() => {
+        if (email.includes('@') && password.length >= 8 && name.trim()) {
+          const newUser: User = {
+            id: `user_${Date.now()}`,
+            email,
+            name,
+            userType,
+            plan: 'free',
+            joinedAt: new Date().toISOString()
+          };
+          
+          localStorage.setItem('celora_auth_token', 'mock-jwt-token');
+          localStorage.setItem('celora_user', JSON.stringify(newUser));
+          setUser(newUser);
+          setIsLoading(false);
+          resolve();
+        } else {
+          setIsLoading(false);
+          reject(new Error('Please provide valid registration details'));
+        }
+      }, 1000);
+    });
+  };
+
   const logout = () => {
     localStorage.removeItem('celora_auth_token');
     localStorage.removeItem('celora_user');
@@ -111,6 +143,7 @@ export const useMockAuth = () => {
     user,
     isLoading,
     login,
+    register,
     logout,
     isAuthenticated: !!user
   };

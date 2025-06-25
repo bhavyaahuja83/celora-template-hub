@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, ArrowRight, Users, Star, Download, Code, Palette, Smartphone } from "lucide-react";
 import { Link } from "react-router-dom";
 import CategoryFilter from "@/components/CategoryFilter";
 import FeaturedSection from "@/components/FeaturedSection";
@@ -22,6 +22,51 @@ const Index = () => {
     console.log("Searching for:", searchQuery);
     window.location.href = `/categories?search=${encodeURIComponent(searchQuery)}`;
   };
+
+  const testimonials = [
+    {
+      name: "Sarah Chen",
+      role: "UI/UX Designer",
+      content: "Celora saved me weeks of development time. The templates are incredibly well-designed and easy to customize.",
+      rating: 5,
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
+    },
+    {
+      name: "Alex Rodriguez",
+      role: "Flutter Developer",
+      content: "As a seller, I've earned over ₹50,000 in just 3 months. The platform is amazing for creators!",
+      rating: 5,
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
+    },
+    {
+      name: "Priya Sharma",
+      role: "Startup Founder",
+      content: "Found the perfect e-commerce template that helped us launch our MVP in just 2 weeks.",
+      rating: 5,
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face"
+    }
+  ];
+
+  const howItWorks = [
+    {
+      step: 1,
+      title: "Browse Templates",
+      description: "Explore thousands of high-quality templates across web, mobile, and desktop platforms",
+      icon: <Search className="w-8 h-8 text-purple-600" />
+    },
+    {
+      step: 2,
+      title: "Purchase & Download",
+      description: "Buy templates instantly with secure payments and download immediately",
+      icon: <Download className="w-8 h-8 text-purple-600" />
+    },
+    {
+      step: 3,
+      title: "Customize & Launch",
+      description: "Edit the template to match your brand and launch your project quickly",
+      icon: <Code className="w-8 h-8 text-purple-600" />
+    }
+  ];
 
   return (
     <Layout className="bg-gradient-to-br from-purple-50 via-white to-purple-50">
@@ -131,7 +176,7 @@ const Index = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {trendingTemplates?.templates.length ? (
+              {trendingTemplates?.templates && trendingTemplates.templates.length > 0 ? (
                 trendingTemplates.templates.map((template) => (
                   <TemplateCard key={template.id} template={template} />
                 ))
@@ -148,6 +193,90 @@ const Index = () => {
           <div className="text-center mt-12">
             <Button size="lg" variant="outline" className="px-8" asChild>
               <Link to="/categories">View All Templates</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-20 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4 text-gray-800">
+              How It Works
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Get started with premium templates in just three simple steps
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-4xl mx-auto">
+            {howItWorks.map((step, index) => (
+              <div key={step.step} className="text-center">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  {step.icon}
+                </div>
+                <div className="text-sm text-purple-600 font-medium mb-2">STEP {step.step}</div>
+                <h3 className="text-xl font-bold mb-4">{step.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-20 px-4 bg-gray-50">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4 text-gray-800">
+              What Our Users Say
+            </h2>
+            <p className="text-xl text-gray-600">
+              Join thousands of satisfied developers and designers
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-white p-8 rounded-xl shadow-lg">
+                <div className="flex items-center mb-4">
+                  {Array.from({ length: testimonial.rating }).map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-6 leading-relaxed">"{testimonial.content}"</p>
+                <div className="flex items-center">
+                  <img 
+                    src={testimonial.avatar} 
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full mr-4"
+                  />
+                  <div>
+                    <div className="font-medium text-gray-900">{testimonial.name}</div>
+                    <div className="text-sm text-gray-500">{testimonial.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* About Us Snippet */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto text-center">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-3xl font-bold mb-6 text-gray-800">About Celora</h2>
+            <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+              We're building the world's largest marketplace for premium development templates. 
+              Our mission is to help developers ship faster while empowering creators to monetize their skills.
+            </p>
+            <Button size="lg" variant="outline" asChild>
+              <Link to="/about">
+                Learn More About Us
+                <ArrowRight className="ml-2 w-4 h-4" />
+              </Link>
             </Button>
           </div>
         </div>
