@@ -64,7 +64,7 @@ const Navbar = () => {
                 {isSeller && (
                   <>
                     <Button variant="outline" asChild>
-                      <Link to="/upload-template">Upload Template</Link>
+                      <Link to="/upload-template">Sell Templates</Link>
                     </Button>
                     <Button variant="outline" asChild>
                       <Link to="/dashboard">Dashboard</Link>
@@ -130,7 +130,7 @@ const Navbar = () => {
                       <>
                         <Button variant="outline" asChild className="w-full">
                           <Link to="/upload-template" onClick={() => setIsMobileMenuOpen(false)}>
-                            Upload Template
+                            Sell Templates
                           </Link>
                         </Button>
                         <Button variant="outline" asChild className="w-full">

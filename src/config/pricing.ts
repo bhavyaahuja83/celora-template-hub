@@ -11,7 +11,10 @@ export interface PricingPlan {
   icon: any;
   badge?: string;
   maxTemplates?: number;
+  maxPremiumTemplates?: number;
   isUnlimited?: boolean;
+  dailyLimit?: number;
+  prioritySupport?: boolean;
 }
 
 export const pricingPlans: PricingPlan[] = [
@@ -22,25 +25,27 @@ export const pricingPlans: PricingPlan[] = [
     period: 'forever',
     description: 'Perfect for exploring our platform',
     features: [
-      'Full access to all free templates',
+      '15 free template downloads per month',
+      'Max 4 downloads per day',
       'Browse premium templates',
       'Community access',
-      'Basic support',
-      'Can purchase premium templates individually'
+      'Basic support'
     ],
     buttonText: 'Get Started',
     popular: false,
-    icon: 'Star'
+    icon: 'Star',
+    maxTemplates: 15,
+    dailyLimit: 4
   },
   {
     id: 'starter',
     name: 'Starter',
-    price: 500,
+    price: 1249,
     period: 'month',
     description: 'Best for individual developers',
     features: [
-      'Access to 4 premium templates per month',
-      'All free templates included',
+      'Unlimited free templates',
+      'Access to 3 premium templates per month',
       'Priority support',
       'Early access to new templates',
       'Commercial license included',
@@ -50,17 +55,18 @@ export const pricingPlans: PricingPlan[] = [
     popular: true,
     icon: 'Zap',
     badge: 'Most Popular',
-    maxTemplates: 4
+    maxPremiumTemplates: 3,
+    isUnlimited: true
   },
   {
     id: 'pro',
     name: 'Pro',
-    price: 2399,
+    price: 2499,
     period: 'month',
     description: 'Perfect for power users',
     features: [
-      'Unlimited premium template downloads',
-      'All free templates included',
+      'Unlimited free template downloads',
+      'Access to 5 premium templates per month',
       'Priority support',
       'Early access to new templates',
       'Commercial license included',
@@ -71,7 +77,33 @@ export const pricingPlans: PricingPlan[] = [
     buttonText: 'Go Pro',
     popular: false,
     icon: 'Crown',
-    isUnlimited: true
+    isUnlimited: true,
+    maxPremiumTemplates: 5
+  },
+  {
+    id: 'enterprise',
+    name: 'Enterprise',
+    price: 5999,
+    period: 'month',
+    description: 'For teams and agencies',
+    features: [
+      'Unlimited free template downloads',
+      'Access to 15 premium templates per month',
+      'Priority support',
+      'Early access to new templates',
+      'Commercial license included',
+      'Advanced filters & search',
+      'Template customization guide',
+      'Exclusive enterprise templates',
+      'Team collaboration tools',
+      'Custom template requests'
+    ],
+    buttonText: 'Get Enterprise',
+    popular: false,
+    icon: 'Users',
+    isUnlimited: true,
+    maxPremiumTemplates: 15,
+    prioritySupport: true
   },
   {
     id: 'team',
@@ -80,7 +112,7 @@ export const pricingPlans: PricingPlan[] = [
     period: 'custom',
     description: 'Perfect for development teams',
     features: [
-      'Everything in Pro plan',
+      'Everything in Enterprise plan',
       'Team collaboration tools',
       'Custom template requests',
       'Dedicated account manager',
@@ -91,6 +123,6 @@ export const pricingPlans: PricingPlan[] = [
     ],
     buttonText: 'Contact Sales',
     popular: false,
-    icon: 'Users'
+    icon: 'Building'
   }
 ];
