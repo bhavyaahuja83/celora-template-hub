@@ -10,8 +10,8 @@ const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white py-12">
       <div className="container mx-auto px-4">
-        {/* Sell Your Templates CTA - Only show for sellers */}
-        {isSeller && (
+        {/* Sell Your Templates CTA - Show for everyone who's not already a seller */}
+        {(!isAuthenticated || (isAuthenticated && user?.userType !== 'seller')) && (
           <div className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-lg p-8 mb-12 text-center">
             <h3 className="text-2xl font-bold mb-4 text-white">
               Ready to Start Selling?
@@ -22,11 +22,11 @@ const Footer = () => {
             <Button 
               variant="secondary" 
               size="lg" 
-              className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-8 py-3"
+              className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-8 py-3 transition-all duration-300 hover:scale-105"
               asChild
             >
-              <Link to="/upload-template">
-                Sell Your Templates
+              <Link to="/auth">
+                <span className="text-purple-600 font-semibold">Sell Your Templates</span>
               </Link>
             </Button>
           </div>
@@ -52,8 +52,8 @@ const Footer = () => {
             <ul className="space-y-2 text-gray-400">
               <li><Link to="/categories" className="hover:text-white transition-colors">Browse Templates</Link></li>
               <li><Link to="/pricing" className="hover:text-white transition-colors">Pricing</Link></li>
-              <li><Link to="/tools" className="hover:text-white transition-colors">Tools</Link></li>
               <li><Link to="/creator-info" className="hover:text-white transition-colors">Sell Templates</Link></li>
+              <li><Link to="/community" className="hover:text-white transition-colors">Community</Link></li>
             </ul>
           </div>
 
@@ -64,7 +64,6 @@ const Footer = () => {
               <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
               <li><Link to="/blog" className="hover:text-white transition-colors">Blog</Link></li>
               <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-              <li><Link to="/community" className="hover:text-white transition-colors">Community</Link></li>
             </ul>
           </div>
 
