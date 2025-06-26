@@ -11,11 +11,25 @@ import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { BasicInfoStep, UserTypeStep, PANCardStep, BankDetailsStep, VerificationPendingStep } from "@/components/auth/AuthSteps";
 
+interface FormData {
+  email?: string;
+  password?: string;
+  name?: string;
+  mobile?: string;
+  countryCode?: string;
+  userType?: 'buyer' | 'seller' | 'undecided';
+  panNumber?: string;
+  address?: string;
+  accountHolderName?: string;
+  accountNumber?: string;
+  ifscCode?: string;
+}
+
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState<FormData>({});
   const { login, register, registerSeller, isLoading } = useMockAuth();
   const navigate = useNavigate();
 
@@ -47,11 +61,11 @@ const Auth = () => {
     if (formData.userType === "buyer" || formData.userType === "undecided") {
       try {
         await register(
-          formData.email,
-          formData.password,
-          formData.name,
+          formData.email!,
+          formData.password!,
+          formData.name!,
           formData.userType as 'buyer' | 'seller' | 'undecided',
-          formData.countryCode + formData.mobile
+          formData.countryCode! + formData.mobile!
         );
         toast.success("Registration successful!");
         navigate("/");
@@ -62,16 +76,16 @@ const Auth = () => {
       // For sellers, register with full KYC data
       try {
         await registerSeller({
-          email: formData.email,
-          password: formData.password,
-          name: formData.name,
-          mobile: formData.countryCode + formData.mobile,
-          panNumber: formData.panNumber,
-          address: formData.address,
+          email: formData.email!,
+          password: formData.password!,
+          name: formData.name!,
+          mobile: formData.countryCode! + formData.mobile!,
+          panNumber: formData.panNumber!,
+          address: formData.address!,
           bankDetails: {
-            accountHolderName: formData.accountHolderName,
-            accountNumber: formData.accountNumber,
-            ifscCode: formData.ifscCode
+            accountHolderName: formData.accountHolderName!,
+            accountNumber: formData.accountNumber!,
+            ifscCode: formData.ifscCode!
           }
         });
         setCurrentStep(5); // Show verification pending step

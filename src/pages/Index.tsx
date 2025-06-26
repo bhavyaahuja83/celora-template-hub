@@ -9,22 +9,32 @@ import { Input } from "@/components/ui/input";
 import { Search, Zap, Award, Users, TrendingUp, Star, Download, Clock } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Template } from "@/types/template";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const mockTemplates = Array.from({ length: 8 }, (_, i) => ({
-    id: i + 1,
+  const mockTemplates: Template[] = Array.from({ length: 8 }, (_, i) => ({
+    id: String(i + 1),
     title: `Template ${i + 1}`,
     description: "Professional template for modern projects",
     price: 49 + (i * 10),
     image: `https://images.unsplash.com/photo-${1500000000000 + i}?w=400&h=300&fit=crop`,
-    category: ["React", "Vue", "Angular"][i % 3],
+    category: ["Web", "Flutter", "Android", "UI Kit"][i % 4] as 'Web' | 'Flutter' | 'Android' | 'UI Kit',
     downloads: 1000 + (i * 100),
     rating: 4.5 + (i * 0.1),
-    timesSaved: 500 + (i * 50)
+    tags: ["React", "TypeScript", "Modern", "Professional"],
+    isPremium: i % 3 === 0,
+    isFree: i % 5 === 0,
+    isTrending: i % 4 === 0,
+    isNew: i < 3,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    userId: "user123"
   }));
+
+  const featuredTemplates = mockTemplates.slice(0, 3);
 
   const stats = [
     { icon: Users, label: "Active Users", value: "50K+", color: "text-blue-600" },
@@ -117,7 +127,7 @@ const Index = () => {
       {/* Featured Section */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <FeaturedSection />
+          <FeaturedSection templates={featuredTemplates} />
         </div>
       </section>
 
