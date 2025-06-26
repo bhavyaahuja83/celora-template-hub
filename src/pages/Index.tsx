@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, ArrowRight, Users, Star, Download, Code, Palette, Smartphone } from "lucide-react";
+import { Search, ArrowRight, Users, Star, Download, Code, Palette, Smartphone, Clock, TrendingUp, Award } from "lucide-react";
 import { Link } from "react-router-dom";
 import CategoryFilter from "@/components/CategoryFilter";
 import FeaturedSection from "@/components/FeaturedSection";
@@ -32,7 +32,7 @@ const Index = () => {
       avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face"
     },
     {
-      name: "Alex Rodriguez",
+      name: "Alex Rodriguez", 
       role: "Flutter Developer",
       content: "As a seller, I've earned over ₹50,000 in just 3 months. The platform is amazing for creators!",
       rating: 5,
@@ -40,7 +40,7 @@ const Index = () => {
     },
     {
       name: "Priya Sharma",
-      role: "Startup Founder",
+      role: "Startup Founder", 
       content: "Found the perfect e-commerce template that helped us launch our MVP in just 2 weeks.",
       rating: 5,
       avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face"
@@ -68,6 +68,27 @@ const Index = () => {
     }
   ];
 
+  const roiStats = [
+    {
+      icon: <Clock className="w-6 h-6 text-green-600" />,
+      label: "Average Time Saved",
+      value: "40+ hours",
+      description: "Per project implementation"
+    },
+    {
+      icon: <TrendingUp className="w-6 h-6 text-blue-600" />,
+      label: "Average Cost Saved",
+      value: "₹25,000+",
+      description: "Compared to custom development"
+    },
+    {
+      icon: <Award className="w-6 h-6 text-purple-600" />,
+      label: "Quality Guarantee",
+      value: "100%",
+      description: "Professional-grade templates"
+    }
+  ];
+
   return (
     <Layout className="bg-gradient-to-br from-purple-50 via-white to-purple-50">
       {/* Hero Section */}
@@ -79,7 +100,7 @@ const Index = () => {
               <br />
               <span className="text-4xl md:text-6xl">Made Simple</span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed animate-slide-in-right">
               Discover thousands of high-quality templates for web, mobile, and desktop applications. 
               Built by developers, for developers.
             </p>
@@ -101,7 +122,7 @@ const Index = () => {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="rounded-full px-8 bg-purple-600 hover:bg-purple-700 shadow-lg"
+                className="rounded-full px-8 bg-purple-600 hover:bg-purple-700 shadow-lg hover:scale-105 transition-transform"
               >
                 <Search className="w-5 h-5" />
               </Button>
@@ -110,22 +131,44 @@ const Index = () => {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto animate-slide-in-right">
-            <div className="text-center">
+            <div className="text-center hover:scale-105 transition-transform">
               <div className="text-3xl font-bold text-purple-600 mb-2">10k+</div>
               <div className="text-gray-600">Templates</div>
             </div>
-            <div className="text-center">
+            <div className="text-center hover:scale-105 transition-transform">
               <div className="text-3xl font-bold text-purple-600 mb-2">50k+</div>
               <div className="text-gray-600">Downloads</div>
             </div>
-            <div className="text-center">
+            <div className="text-center hover:scale-105 transition-transform">
               <div className="text-3xl font-bold text-purple-600 mb-2">5k+</div>
               <div className="text-gray-600">Developers</div>
             </div>
-            <div className="text-center">
+            <div className="text-center hover:scale-105 transition-transform">
               <div className="text-3xl font-bold text-purple-600 mb-2">4.9★</div>
               <div className="text-gray-600">Rating</div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ROI Stats Section */}
+      <section className="py-16 px-4 bg-white/70">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4 text-gray-800">Why Choose Celora?</h2>
+            <p className="text-xl text-gray-600">Save time, money, and effort with our premium templates</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {roiStats.map((stat, index) => (
+              <div key={index} className="text-center p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  {stat.icon}
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">{stat.value}</h3>
+                <p className="font-medium text-gray-700 mb-1">{stat.label}</p>
+                <p className="text-sm text-gray-500">{stat.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -154,10 +197,10 @@ const Index = () => {
       <section className="py-16 px-4 bg-white/50">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4 text-gray-800">
+            <h2 className="text-4xl font-bold mb-4 text-gray-800 animate-fade-in">
               🔥 Trending This Week
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-600 animate-slide-in-right">
               Most popular templates chosen by our community
             </p>
           </div>
@@ -177,8 +220,10 @@ const Index = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {trendingTemplates?.templates && trendingTemplates.templates.length > 0 ? (
-                trendingTemplates.templates.map((template) => (
-                  <TemplateCard key={template.id} template={template} />
+                trendingTemplates.templates.map((template, index) => (
+                  <div key={template.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                    <TemplateCard template={template} />
+                  </div>
                 ))
               ) : (
                 <div className="col-span-full text-center py-12">
@@ -191,7 +236,7 @@ const Index = () => {
           )}
 
           <div className="text-center mt-12">
-            <Button size="lg" variant="outline" className="px-8" asChild>
+            <Button size="lg" variant="outline" className="px-8 hover:scale-105 transition-transform" asChild>
               <Link to="/categories">View All Templates</Link>
             </Button>
           </div>
@@ -202,18 +247,18 @@ const Index = () => {
       <section className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 text-gray-800">
+            <h2 className="text-4xl font-bold mb-4 text-gray-800 animate-fade-in">
               How It Works
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto animate-slide-in-right">
               Get started with premium templates in just three simple steps
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-4xl mx-auto">
             {howItWorks.map((step, index) => (
-              <div key={step.step} className="text-center">
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div key={step.step} className="text-center animate-fade-in" style={{ animationDelay: `${index * 0.2}s` }}>
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6 hover:scale-110 transition-transform">
                   {step.icon}
                 </div>
                 <div className="text-sm text-purple-600 font-medium mb-2">STEP {step.step}</div>
@@ -229,17 +274,17 @@ const Index = () => {
       <section className="py-20 px-4 bg-gray-50">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 text-gray-800">
+            <h2 className="text-4xl font-bold mb-4 text-gray-800 animate-fade-in">
               What Our Users Say
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-600 animate-slide-in-right">
               Join thousands of satisfied developers and designers
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-white p-8 rounded-xl shadow-lg">
+              <div key={index} className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
                 <div className="flex items-center mb-4">
                   {Array.from({ length: testimonial.rating }).map((_, i) => (
                     <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
@@ -266,13 +311,13 @@ const Index = () => {
       {/* About Us Snippet */}
       <section className="py-16 px-4">
         <div className="container mx-auto text-center">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-3xl mx-auto animate-fade-in">
             <h2 className="text-3xl font-bold mb-6 text-gray-800">About Celora</h2>
             <p className="text-lg text-gray-600 mb-8 leading-relaxed">
               We're building the world's largest marketplace for premium development templates. 
               Our mission is to help developers ship faster while empowering creators to monetize their skills.
             </p>
-            <Button size="lg" variant="outline" asChild>
+            <Button size="lg" variant="outline" className="hover:scale-105 transition-transform" asChild>
               <Link to="/about">
                 Learn More About Us
                 <ArrowRight className="ml-2 w-4 h-4" />
@@ -285,18 +330,18 @@ const Index = () => {
       {/* CTA Section */}
       <section className="py-20 px-4 bg-gradient-to-r from-purple-600 to-purple-800">
         <div className="container mx-auto text-center text-white">
-          <h2 className="text-4xl font-bold mb-6">
+          <h2 className="text-4xl font-bold mb-6 animate-fade-in">
             Ready to Build Something Amazing?
           </h2>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto animate-slide-in-right">
             Join thousands of developers who trust Celora for their template needs. 
             Start your next project today!
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" className="px-8" asChild>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-scale-in">
+            <Button size="lg" variant="secondary" className="px-8 hover:scale-105 transition-transform" asChild>
               <Link to="/categories">Browse Templates</Link>
             </Button>
-            <Button size="lg" variant="outline" className="px-8 border-white text-white hover:bg-white hover:text-purple-700" asChild>
+            <Button size="lg" variant="outline" className="px-8 border-white text-white hover:bg-white hover:text-purple-700 hover:scale-105 transition-all" asChild>
               <Link to="/creator-info">Sell Your Templates</Link>
             </Button>
           </div>

@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,38 +17,35 @@ import About from "./pages/About";
 import Blog from "./pages/Blog";
 import CreatorInfo from "./pages/CreatorInfo";
 import NotFound from "./pages/NotFound";
+import Community from "./pages/Community";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
+function App() {
+  return (
+    <QueryClient>
       <BrowserRouter>
-        <div className="w-full">
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/upload-template" element={<UploadTemplate />} />
-            <Route path="/template/:id" element={<TemplateDetail />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/creator-info" element={<CreatorInfo />} />
-            <Route path="/sell" element={<CreatorInfo />} />
-            <Route path="/tools" element={<NotFound />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
+        <Toaster />
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/upload-template" element={<UploadTemplate />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/creator-info" element={<CreatorInfo />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/template/:id" element={<TemplateDetail />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+    </QueryClient>
+  );
+}
 
 export default App;
